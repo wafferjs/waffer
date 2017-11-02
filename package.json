@@ -1,0 +1,27 @@
+{
+  "name": "waffer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js -s"
+  },
+  "bin": {
+    "waffer": "index.js"
+  },
+  "author": "Casper Seweryn <nya@wvffle.net>",
+  "license": "MIT",
+  "dependencies": {
+    "compression": "^1.7.1",
+    "express": "^4.16.2",
+    "mongoose": "^4.12.4",
+    "morgan": "^1.9.0",
+    "nib": "^1.1.2",
+    "optimist": "^0.6.1",
+    "pug": "^2.0.0-rc.4",
+    "socket.io": "^2.0.4",
+    "stylus": "^0.54.5",
+    "utilus": "^2.0.1"
+  }
+}
