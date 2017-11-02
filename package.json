@@ -8,7 +8,7 @@
     "start": "node index.js -s"
   },
   "bin": {
-    "waffer": "index.js"
+    "waffer": "cli.js"
   },
   "author": "Casper Seweryn <nya@wvffle.net>",
   "license": "MIT",
