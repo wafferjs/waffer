@@ -1,12 +1,18 @@
 const Mongo     = require('./database/mongo');
 const Database  = require('./database');
 const server    = require('./server');
+const fs        = require('fs-extra');
 const optimist  = require('optimist');
+const path      = require('path');
 
 const { argv } = optimist;
 
-if (argv.init) {
+if (argv.init != null) {
+  if (argv.init === true) {
+    argv.init = '.';
+  }
 
+  fs.copySync(path.join(__dirname, 'template'), path.join(process.cwd(), argv.init));
   return;
 }
 
