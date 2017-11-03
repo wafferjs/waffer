@@ -60,19 +60,23 @@ if (argv._[0] === 'export') {
   for (let s of glob.sync(`{${static}/**,${styles}/**}`, { dot: true })) {
     const p = path.join(cwd, 'html', s.substring(static.length));
 
-    if (fs.statSync(s).isFile()) {
-      fs.ensureFileSync(p);
-
-      parser.parse(s, (err, content) => {
-        if (err && !~`${err}`.indexOf('no such file')) {
-          console.error(err);
-        }
-
-        if (content) {
-          fs.writeFileSync(p, content);
-        }
-      });
+    if (fs.statSync(s).isDirectory()) {
+      fs.ensureDirSync(p);
+      continue;
     }
+
+    parser.parse(s, (err, contentOrBuf, ext) => {
+      if (err && !~`${err}`.indexOf('no such file')) {
+        console.error(err);
+      }
+
+      if (contentOrBuf) {
+        let d = p.split('.');
+        d.pop();
+        d.push(ext);
+        fs.writeFileSync(d.join('.'), contentOrBuf);
+      }
+    });
   }
 
   return;

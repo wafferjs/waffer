@@ -10,5 +10,5 @@ module.exports = (file, next) => {
     err = e;
   }
 
-  return next(err, html);
+  return next(err, html, '.html');
 }

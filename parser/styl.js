@@ -26,11 +26,10 @@ module.exports = (file, next) => {
 
     renderer.render((err, css) => {
       if (err) {
-
         return;
       }
 
-      next(err, css);
+      next(err, css, '.css');
     });
   };
 

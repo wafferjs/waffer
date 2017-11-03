@@ -72,37 +72,6 @@ module.exports = app => {
     res.type('.html').send(html);
   });
 
-  // handle: file.pug
-  app.get('/**/*.pug', (req, res) => {
-    const { file } = req;
-
-    parser.parse(file, (err, content) => {
-      if (err) return next(err);
-      res.type('.html').send(content);
-    });
-  });
-
-  // handle: file.styl
-  app.get('**/*.styl', (req, res, next) => {
-    const { file } = req;
-
-    parser.parse(file, (err, content) => {
-      if (err) return next(err);
-      res.type('.css').send(content);
-    });
-  });
-
-  // handle: file.js
-  app.get('**/*.js', (req, res, next) => {
-    const { file } = req;
-
-    parser.parse(file, (err, content) => {
-      if (err) return next(err);
-      res.type('.js').send(content);
-    });
-
-  });
-
   // redirect: /route -> /route/
   app.get(/^\/[^.]*$/, (req, res) => {
     res.redirect(path.join(req.path, '/'));
@@ -130,12 +99,17 @@ module.exports = app => {
     const package = require(path.join(component, 'package.json'));
   });
 
-  // TODO:
-  // handle: file.es
-  app.get('**/*.es', (req, res) => {
-    // add webpack support
-  });
 
   // handle: static files
   app.use(express.static(path.join(cwd, 'static')));
+
+  // handle: file.*
+  app.get('/**/*.*', (req, res) => {
+    const { file } = req;
+
+    parser.parse(file, (err, contentOrBuf, ext) => {
+      if (err) return next(err);
+      res.type(ext).send(`${contentOrBuf}`);
+    });
+  });
 }
