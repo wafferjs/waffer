@@ -1,3 +1,4 @@
+const parser  = require('./parser');
 const express = require('express');
 const stylus  = require('stylus');
 const utilus  = require('utilus');
@@ -74,60 +75,29 @@ module.exports = app => {
   // handle: file.pug
   app.get('/**/*.pug', (req, res) => {
     const { file } = req;
-    const html = pug.renderFile(file);
 
-    res.type('.html').send(html);
+    parser.parse(file, (err, content) => {
+      if (err) return next(err);
+      res.type('.html').send(content);
+    });
   });
 
   // handle: file.styl
   app.get('**/*.styl', (req, res, next) => {
     const { file } = req;
 
-    const render = content => {
-      const styl     = `${content}`;
-
-      const renderer = stylus(styl).set('filename', file);
-
-      renderer.set('filename', file);
-      renderer.set('compress', true);
-      renderer.set('include css', true);
-
-      // add nib for css backward compatibility
-      renderer.include(nib.path).import('nib');
-
-      // add utilus for easier positioning
-      renderer.include(path.join(cwd, 'node_modules/utilus/')).import('utilus');
-
-      // add global styles
-      renderer.include(path.join(cwd, 'styles'));
-
-      renderer.render((err, css) => {
-        if (err) css = `/*\n${err}\n*/`;
-
-        res.type('.css').send(css);
-      });
-
-    }
-
-    fs.readFile(file, (err, styl) => {
-      if (err) return fs.readFile(path.join(cwd, 'styles', req.path), (err, styl) => {
-          if (err) return next(err);
-
-          render(styl);
-        });
-
-        render(styl);
+    parser.parse(file, (err, content) => {
+      if (err) return next(err);
+      res.type('.css').send(content);
     });
-
   });
 
   // handle: file.js
   app.get('**/*.js', (req, res, next) => {
     const { file } = req;
 
-    fs.readFile(file, (err, content) => {
+    parser.parse(file, (err, content) => {
       if (err) return next(err);
-
       res.type('.js').send(content);
     });
 
@@ -146,10 +116,9 @@ module.exports = app => {
 
     const main = package.unpkg || package.browser || package.main;
 
-    fs.readFile(path.join(component, main), (err, content) => {
-      if (err) next(err);
-
-      res.type('.js').send(`${content}`);
+    parser.parse(path.join(component, main), (err, content) => {
+      if (err) return next(err);
+      res.type('.js').send(content);
     });
   });
 

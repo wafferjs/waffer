@@ -2,29 +2,79 @@
 
 const Mongo     = require('./database/mongo');
 const Database  = require('./database');
+const parser    = require('./parser');
 const server    = require('./server');
 const fs        = require('fs-extra');
 const optimist  = require('optimist');
+const rimraf    = require('rimraf');
 const path      = require('path');
+const glob      = require('glob');
 
 const { argv } = optimist;
+
+const cwd = process.cwd();
 
 if (argv._[0] === 'init') {
   const dir = argv._.length < 2 ? '.' : argv._[1];
 
   const src = path.join(__dirname, 'template');
-  const dest = path.join(process.cwd(), dir);
+  const dest = path.join(cwd, dir);
   fs.copySync(src, dest);
   console.log('new waffer project initialized');
   return;
 }
 
-if (argv.export) {
+if (!fs.existsSync(path.join(cwd, 'views'))) {
+  console.error('error: not a valid waffer project');
   return;
 }
 
-if (!fs.existsSync(path.join(process.cwd(), 'views'))) {
-  console.error('error: not a valid waffer project');
+if (argv._[0] === 'export') {
+  const views = fs.readdirSync(path.join(cwd, 'views'));
+  views.unshift(views.splice(views.indexOf('index'), 1)[0]);
+
+  try {
+    rimraf.sync('html');
+  } catch (e) {}
+
+  fs.mkdirSync('html');
+
+  for (let view of views) {
+    const dir = path.join(cwd, 'views', view, 'public');
+
+    const index = path.join(dir, 'index.pug');
+    parser.parse(index, (err, content) => {
+      if (err && !~`${err}`.indexOf('no such file')) {
+        console.error(err);
+      }
+
+      if (content) {
+        fs.writeFileSync(path.join(cwd, 'html', view + '.html'), content);
+      }
+    });
+
+  }
+
+  const static = path.join(cwd, 'static');
+  const styles = path.join(cwd, 'styles');
+  for (let s of glob.sync(`{${static}/**,${styles}/**}`, { dot: true })) {
+    const p = path.join(cwd, 'html', s.substring(static.length));
+
+    if (fs.statSync(s).isFile()) {
+      fs.ensureFileSync(p);
+
+      parser.parse(s, (err, content) => {
+        if (err && !~`${err}`.indexOf('no such file')) {
+          console.error(err);
+        }
+
+        if (content) {
+          fs.writeFileSync(p, content);
+        }
+      });
+    }
+  }
+
   return;
 }
 
