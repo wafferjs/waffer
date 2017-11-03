@@ -16,6 +16,7 @@
     "compression": "^1.7.1",
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
+    "glob": "^7.1.2",
     "mongoose": "^4.12.4",
     "morgan": "^1.9.0",
     "nib": "^1.1.2",
