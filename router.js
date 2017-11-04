@@ -49,7 +49,7 @@ module.exports = app => {
   const cwd = process.cwd();
 
   // handle: libs
-  app.get(/^.*unpkg:(.+)$/, (req, res, next) => {
+  app.get(/^.*\/lib\/(.+)$/, (req, res, next) => {
     res.redirect(path.join('https://unpkg.com', req.params[0]));
   });
 

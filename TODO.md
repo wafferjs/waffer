@@ -1,7 +1,7 @@
 ## TODO
 - [x] Exporting
 - [ ] Router
-  - [ ] unpkg imports
+  - [x] unpkg imports
   - [x] view imports
   - [ ] subviews support
 - [ ] Parsers
@@ -23,4 +23,3 @@
   - [ ] standardized api
   - [x] mongo
   - [ ] redis
-
