@@ -41,16 +41,25 @@ const fs      = require('fs');
  *          └─ index.styl
  */
 
-const cache = {
-  __duration: 60 * 1000,
-};
-
 module.exports = app => {
   const cwd = process.cwd();
 
   // handle: libs
   app.get(/^.*\/lib\/(.+)$/, (req, res, next) => {
     res.redirect(path.join('https://unpkg.com', req.params[0]));
+  });
+
+  // handle: /view/@file
+  app.use(/^(.*)\/@(.+)$/, (req, res, next) => {
+    const view = req.params[0] || 'index';
+    const file = req.params[1];
+
+    res.redirect(path.join(view, file));
+  });
+
+  // redirect: /route -> /route/
+  app.get(/^\/[^.]+$/, (req, res) => {
+    res.redirect(path.join(req.path, '/'));
   });
 
   // add: { file, controller } to req
@@ -72,51 +81,31 @@ module.exports = app => {
     next();
   });
 
-
-  // handle: /view/@file
-  app.use(/^(.*)\/@(.+)$/, (req, res, next) => {
-    const view = req.params[0] || 'index';
-    const file = req.params[1];
-
-    res.redirect(path.join(view, file));
-  });
-
   // handle: /route/
   app.use(/^.*\/$/, (req, res, next) => {
     require(req.controller)(req, res, next);
   }, (req, res) => {
     const { file } = req;
-    const html = pug.renderFile(file, { sess: req.session });
-    res.type('.html').send(html);
+
+    parser.parse(file, (err, contentOrBuf, ext) => {
+      if (err) return next(err);
+      res.type(ext).send(contentOrBuf);
+    }, false, req.session);
   });
 
-  // redirect: /route -> /route/
-  app.get(/^\/[^.]*$/, (req, res) => {
-    res.redirect(path.join(req.path, '/'));
-  });
+  // handle: static files
+  app.use(express.static(path.join(cwd, 'static')));
 
   // handle: file.*
   app.get('*', (req, res, next) => {
     const { file } = req;
 
-    const data = cache[file];
-    if (data && +new Date - cache.__duration < data.timestamp) {
-      console.log('cached!');
-      return res.type(data.ext).send(data.body);
-    }
-
     parser.parse(file, (err, contentOrBuf, ext) => {
       if (err) return next(err);
 
-      if (contentOrBuf) {
-        cache[file] = { ext, body: contentOrBuf, timestamp: +new Date };
-      }
       res.type(ext).send(`${contentOrBuf}`);
     }, false, req.session);
 
   });
-
-  // handle: static files
-  app.use(express.static(path.join(cwd, 'static')));
 
 }

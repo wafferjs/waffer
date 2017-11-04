@@ -8,8 +8,9 @@ const morgan   = require('morgan');
 const { argv } = optimist;
 
 class WafferServer {
-  constructor() {
+  constructor(options = {}) {
     this.app = express();
+    this.http = require(options.server || 'http').Server(this.app);
 
     // compression
     this.app.use(compress());
@@ -20,13 +21,14 @@ class WafferServer {
     // parse json
     this.app.use(parser.json());
     this.app.use(parser.urlencoded({ extended: true }));
-
-    // create routes
-    router(this.app);
   }
 
   listen(port = argv.port) {
-    const listener = this.app.listen(port || 0, () => {
+
+    // create routes
+    router(this.app);
+
+    const listener = this.http.listen(port || 0, () => {
       console.log(`listening on ${listener.address().port}`);
     });
 
