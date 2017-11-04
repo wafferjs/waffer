@@ -6,6 +6,7 @@ const parser    = require('./parser');
 const server    = require('./server');
 const fs        = require('fs-extra');
 const optimist  = require('optimist');
+const parse5    = require('parse5');
 const rimraf    = require('rimraf');
 const path      = require('path');
 const glob      = require('glob');
@@ -58,7 +59,7 @@ if (argv._[0] === 'export') {
       if (contentOrBuf) {
         let d = p.split('.');
         d.pop();
-        d.push(ext);
+        d.push(ext.substr(1));
         fs.writeFileSync(d.join('.'), contentOrBuf);
       }
     });
@@ -75,7 +76,52 @@ if (argv._[0] === 'export') {
       }
 
       if (contentOrBuf) {
-        fs.writeFileSync(path.join(cwd, 'html', view + ext), contentOrBuf);
+        const document = parse5.parse(contentOrBuf, { locationInfo: false });
+
+        const dfs = function (root) {
+          try {
+            for (let child of root.childNodes) {
+              if (child.tagName === 'script') {
+                for (let attr of child.attrs) {
+                  if (attr.name === 'src') {
+                    if (attr.value[0] === '@') {
+                      attr.value = path.join(view, attr.value.substr(1));
+                      continue;
+                    }
+
+                    attr.value = attr.value.replace('lib/', 'https://unpkg.com/');
+                  }
+                }
+              }
+
+              if (child.tagName === 'link') {
+                for (let attr of child.attrs) {
+                  if (attr.name === 'href') {
+                    if (attr.value[0] === '@') {
+                      attr.value = path.join(view, attr.value.substr(1)).replace(/\.(?!css).+$/, '.css');
+                      continue;
+                    }
+
+                    attr.value = attr.value.replace('lib/', 'https://unpkg.com/').replace(/\.(?!css).+$/, '.css');
+                  }
+                }
+              }
+
+              if (child.tagName === 'a') {
+                for (let attr of child.attrs) {
+                  if (attr.name === 'href') {
+                    attr.value = attr.value.replace(/^\/([^/]+)\/$/, '$1.html');
+                  }
+                }
+              }
+              dfs(child);
+            }
+          } catch (e) {}
+        };
+
+        dfs(document);
+
+        fs.writeFileSync(path.join(cwd, 'html', view + ext), parse5.serialize(document));
       }
     });
 
@@ -87,6 +133,7 @@ if (argv._[0] === 'export') {
       fs.ensureDirSync(dest);
     }
 
+    // public files
     for (let s of public) {
       const p = path.join(dest, s.substring(dir.length));
 
@@ -103,7 +150,7 @@ if (argv._[0] === 'export') {
         if (contentOrBuf) {
           let d = p.split('.');
           d.pop();
-          d.push(ext);
+          d.push(ext.substr(1));
           fs.writeFileSync(d.join('.'), contentOrBuf);
         }
       });
