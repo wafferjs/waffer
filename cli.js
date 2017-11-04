@@ -3,12 +3,12 @@
 const Mongo     = require('./database/mongo');
 const Database  = require('./database');
 const parser    = require('./parser');
-const server    = require('./server');
 const fs        = require('fs-extra');
 const optimist  = require('optimist');
 const rimraf    = require('rimraf');
 const path      = require('path');
 const glob      = require('glob');
+const waffer    = require('./');
 
 const { argv } = optimist;
 
@@ -116,7 +116,7 @@ if (argv._[0] === 'export') {
 }
 
 if (argv._[0] === 'serve') {
-  server.listen();
+  waffer().listen();
   return;
 }
 
