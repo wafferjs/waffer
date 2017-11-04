@@ -45,7 +45,7 @@ module.exports = app => {
   const cwd = process.cwd();
 
   // handle: libs
-  app.get(/^.*\/lib\/(.+)$/, (req, res, next) => {
+  app.get(/^.*\/@lib\/(.+)$/, (req, res, next) => {
     res.redirect(path.join('https://unpkg.com', req.params[0]));
   });
 
@@ -58,7 +58,7 @@ module.exports = app => {
   });
 
   // redirect: /route -> /route/
-  app.get(/^\/[^.]+$/, (req, res) => {
+  app.get(/^\/[^.]+(?!\/).$/, (req, res) => {
     res.redirect(path.join(req.path, '/'));
   });
 
@@ -84,7 +84,7 @@ module.exports = app => {
   // handle: /route/
   app.use(/^.*\/$/, (req, res, next) => {
     require(req.controller)(req, res, next);
-  }, (req, res) => {
+  }, (req, res, next) => {
     const { file } = req;
 
     parser.parse(file, (err, contentOrBuf, ext) => {
