@@ -8,7 +8,7 @@ const cwd    = process.cwd();
 
 utilus.path = path.join(__dirname, '../node_modules/utilus/');
 
-const render = (content, next) => {
+const render = (content, file, next) => {
   const renderer = stylus(`${content}`).set('filename', file);
 
   renderer.set('filename', file);
@@ -37,10 +37,10 @@ const parse = (file, next) => {
     if (err) return fs.readFile(file, function(err, content) {
       if (err) return next(err);
 
-      render(content, next);
+      render(content, file, next);
     });
 
-    render(content, next);
+    render(content, file, next);
   });
 }
 

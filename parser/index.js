@@ -4,22 +4,26 @@ const parsers = fs.readdirSync(__dirname).filter(p => p !== 'index.js');
 
 const determine_parser = function (file) {
   const ext = file.split('.').slice(-1)[0];
-  const parser = ext + '.js';
+  const name = ext + '.js';
 
-  if (~parsers.indexOf(parser)) {
-    return require(`./${parser}`);
+  if (~parsers.indexOf(name)) {
+    const parser = require(`./${name}`);
+    parser.name = ext;
+
+    return parser;
   }
 
-  const default_parser = require(`./file.js`);
-  default_parser.ext = ext;
+  const parser = require(`./file.js`);
+  parser.name = ext;
+  parser.ext = ext;
 
-  return default_parser;
+  return parser;
 }
 
 const parse = function (file, next = function () {}) {
-  const parse = determine_parser(file);
+  const parser = determine_parser(file);
   parser.parse(file, function (err, content) {
-    next(err, content, ext);
+    next(err, content, parser.ext);
   });
 }
 

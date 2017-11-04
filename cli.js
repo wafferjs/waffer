@@ -39,22 +39,7 @@ if (argv._[0] === 'export') {
 
   fs.mkdirSync('html');
 
-  for (let view of views) {
-    const dir = path.join(cwd, 'views', view, 'public');
-
-    const index = path.join(dir, 'index.pug');
-    parser.parse(index, (err, content) => {
-      if (err && !~`${err}`.indexOf('no such file')) {
-        console.error(err);
-      }
-
-      if (content) {
-        fs.writeFileSync(path.join(cwd, 'html', view + '.html'), content);
-      }
-    });
-
-  }
-
+  // static files and styles
   const static = path.join(cwd, 'static');
   const styles = path.join(cwd, 'styles');
   for (let s of glob.sync(`{${static}/**,${styles}/**}`, { dot: true })) {
@@ -66,7 +51,7 @@ if (argv._[0] === 'export') {
     }
 
     parser.parse(s, (err, contentOrBuf, ext) => {
-      if (err && !~`${err}`.indexOf('no such file')) {
+      if (err) {
         console.error(err);
       }
 
@@ -78,6 +63,53 @@ if (argv._[0] === 'export') {
       }
     });
   }
+
+  for (let view of views) {
+    const dir = path.join(cwd, 'views', view, 'public');
+
+    // index of view
+    const index = path.join(dir, 'index.pug');
+    parser.parse(index, (err, contentOrBuf, ext) => {
+      if (err && !~`${err}`.indexOf('no such file')) {
+        console.error(err);
+      }
+
+      if (contentOrBuf) {
+        fs.writeFileSync(path.join(cwd, 'html', view + ext), contentOrBuf);
+      }
+    });
+
+    // make script dir
+    const dest = path.join(cwd, 'html', view);
+    const public = glob.sync(dir + '/**').filter(f => !f.endsWith('.pug'));
+
+    if (public.length > 0) {
+      fs.ensureDirSync(dest);
+    }
+
+    for (let s of public) {
+      const p = path.join(dest, s.substring(dir.length));
+
+      if (fs.statSync(s).isDirectory()) {
+        fs.ensureDirSync(p);
+        continue;
+      }
+
+      parser.parse(s, (err, contentOrBuf, ext) => {
+        if (err) {
+          console.error(err);
+        }
+
+        if (contentOrBuf) {
+          let d = p.split('.');
+          d.pop();
+          d.push(ext);
+          fs.writeFileSync(d.join('.'), contentOrBuf);
+        }
+      });
+    }
+  }
+
 
   return;
 }
