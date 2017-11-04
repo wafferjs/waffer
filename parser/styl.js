@@ -32,13 +32,6 @@ const render = (content, file, next, exp) => {
       const div = p.substr(6).split('/public/');
       const view = div.shift();
 
-      /*
-      style.define('url', stylus.url({ paths: [
-        path.join(cwd, 'html'),
-        path.join(cwd, 'html', view),
-      ], }));
-      */
-
       const urlfunc = function (url) {
         const Compiler = require('stylus/lib/visitor/compiler');
         const nodes    = require('stylus/lib/nodes');
