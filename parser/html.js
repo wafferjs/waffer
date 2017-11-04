@@ -17,7 +17,7 @@ const _export(content, file) {
                 continue;
               }
 
-              attr.value = attr.value.replace('unpkg:', 'https://unpkg.com/');
+              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
             }
           }
         }
@@ -30,7 +30,7 @@ const _export(content, file) {
                 continue;
               }
 
-              attr.value = attr.value.replace('unpkg:', 'https://unpkg.com/').replace(/\.(?!css).+$/, '.css');
+              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/').replace(/\.(?!css).+$/, '.css');
             }
           }
         }
