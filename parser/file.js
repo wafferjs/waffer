@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const fs     = require('fs');
 
 const parse = (file, next) => {
   return fs.readFile(file, function (err, buf) {

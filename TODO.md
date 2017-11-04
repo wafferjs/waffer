@@ -1,20 +1,24 @@
 ## TODO
-- [x] Exporting
+- [ ] cli
+  - [x] export
+  - [x] serve
+  - [ ] view
+  - [x] help
 - [ ] Router
   - [x] unpkg imports
   - [x] view imports
   - [ ] subviews support
 - [ ] Parsers
   - [x] pug
+  - [x] jade
+  - [x] html
   - [ ] slim
   - [ ] haml
   - [ ] ejs
-
   - [x] stylus
   - [ ] less
   - [ ] sass
   - [ ] postcss
-
   - [ ] coffee
   - [ ] babel (.mjs, .es6)
   - [ ] typescript
