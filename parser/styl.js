@@ -65,7 +65,8 @@ const render = (content, file, next, exp) => {
 
 const parse = (file, next, exp) => {
   fs.readFile(file, function(err, content) {
-    if (err) return fs.readFile(file, function(err, content) {
+    const f = file.substr(cwd.length + 7).split('/public/').pop();
+    if (err) return fs.readFile(path.join(cwd, 'styles', f), function(err, content) {
       if (err) return next(err);
 
       render(content, file, next, exp);

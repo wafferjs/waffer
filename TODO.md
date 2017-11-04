@@ -2,7 +2,7 @@
 - [x] Exporting
 - [ ] Router
   - [ ] unpkg imports
-  - [ ] view imports
+  - [x] view imports
   - [ ] subviews support
 - [ ] Parsers
   - [x] pug

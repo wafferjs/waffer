@@ -48,6 +48,11 @@ const cache = {
 module.exports = app => {
   const cwd = process.cwd();
 
+  // handle: libs
+  app.get(/^.*unpkg:(.+)$/, (req, res, next) => {
+    res.redirect(path.join('https://unpkg.com', req.params[0]));
+  });
+
   // add: { file, controller } to req
   app.use((req, res, next) => {
     const ppath = path.parse(req.path);
@@ -67,14 +72,13 @@ module.exports = app => {
     next();
   });
 
-  // handle: libs
-  app.get('/unpkg\\:*', (req, res, next) => {
-    let url = req.path.replace('/unpkg:', 'https://unpkg.com/');
-    if (url.endsWith('/')) {
-      url = url.slice(0, -1);
-    }
 
-    res.redirect(url);
+  // handle: /view/@file
+  app.use(/^(.*)\/@(.+)$/, (req, res, next) => {
+    const view = req.params[0] || 'index';
+    const file = req.params[1];
+
+    res.redirect(path.join(view, file));
   });
 
   // handle: /route/
