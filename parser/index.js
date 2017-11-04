@@ -13,13 +13,13 @@ const determine_parser = function (file) {
   return require(`./file.js`);
 }
 
-const parse = function (file, next = function () {}, exp) {
+const parse = function (file, next = function () {}, exp = false, options = {}) {
   const ext = '.' + file.split('.').slice(-1)[0];
 
   const parser = determine_parser(file);
   parser.parse(file, function (err, content) {
     next(err, content, parser.ext || ext);
-  }, exp);
+  }, exp, options);
 }
 
 module.exports = {

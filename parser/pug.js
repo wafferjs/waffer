@@ -2,12 +2,12 @@ const pug    = require('pug');
 
 const cwd = process.cwd();
 
-const parse = (file, next, exp) => {
+const parse = (file, next, exp, options) => {
   let html;
   let err;
 
   try {
-    html = pug.renderFile(file);
+    html = pug.renderFile(file, options || {});
   } catch (e) {
     err = e;
   }

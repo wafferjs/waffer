@@ -112,7 +112,7 @@ module.exports = app => {
         cache[file] = { ext, body: contentOrBuf, timestamp: +new Date };
       }
       res.type(ext).send(`${contentOrBuf}`);
-    });
+    }, false, req.session);
 
   });
 
