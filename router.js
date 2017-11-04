@@ -85,9 +85,9 @@ module.exports = app => {
 
     const main = package.unpkg || package.browser || package.main;
 
-    parser.parse(path.join(component, main), (err, content) => {
+    parser.parse(path.join(component, main), (err, content, ext) => {
       if (err) return next(err);
-      res.type('.js').send(content);
+      res.type(ext).send(content);
     });
   });
 

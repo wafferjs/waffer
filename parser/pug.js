@@ -1,6 +1,6 @@
 const pug = require('pug');
 
-module.exports = (file, next) => {
+const parse = (file, next) => {
   let html;
   let err;
 
@@ -10,5 +10,9 @@ module.exports = (file, next) => {
     err = e;
   }
 
-  return next(err, html, '.html');
+  return next(err, html);
 }
+
+module.exports = {
+  parse, ext: '.html',
+};
