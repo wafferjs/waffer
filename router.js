@@ -41,6 +41,10 @@ const fs      = require('fs');
  *          └─ index.styl
  */
 
+const cache = {
+  __duration: 60 * 1000,
+};
+
 module.exports = app => {
   const cwd = process.cwd();
 
@@ -63,6 +67,16 @@ module.exports = app => {
     next();
   });
 
+  // handle: libs
+  app.get('/unpkg\\:*', (req, res, next) => {
+    let url = req.path.replace('/unpkg:', 'https://unpkg.com/');
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+
+    res.redirect(url);
+  });
+
   // handle: /route/
   app.use(/^.*\/$/, (req, res, next) => {
     require(req.controller)(req, res, next);
@@ -77,39 +91,28 @@ module.exports = app => {
     res.redirect(path.join(req.path, '/'));
   });
 
-  // handle: bower libs
-  app.get('/libs/:lib.js', (req, res, next) => {
-    const { lib } = req.params;
-    const component = path.join(cwd, 'bower_components', lib);
-    const package = require(path.join(component, 'package.json'));
+  // handle: file.*
+  app.get('*', (req, res, next) => {
+    const { file } = req;
 
-    const main = package.unpkg || package.browser || package.main;
+    const data = cache[file];
+    if (data && +new Date - cache.__duration < data.timestamp) {
+      console.log('cached!');
+      return res.type(data.ext).send(data.body);
+    }
 
-    parser.parse(path.join(component, main), (err, content, ext) => {
+    parser.parse(file, (err, contentOrBuf, ext) => {
       if (err) return next(err);
-      res.type(ext).send(content);
+
+      if (contentOrBuf) {
+        cache[file] = { ext, body: contentOrBuf, timestamp: +new Date };
+      }
+      res.type(ext).send(`${contentOrBuf}`);
     });
-  });
 
-  // TODO:
-  // handle: bower lib files
-  app.get('/libs/:lib/:file', (req, res) => {
-    const { lib, file } = req.params;
-    const component = path.join(cwd, 'bower_components', lib);
-    const package = require(path.join(component, 'package.json'));
   });
-
 
   // handle: static files
   app.use(express.static(path.join(cwd, 'static')));
 
-  // handle: file.*
-  app.get('/**/*.*', (req, res) => {
-    const { file } = req;
-
-    parser.parse(file, (err, contentOrBuf, ext) => {
-      if (err) return next(err);
-      res.type(ext).send(`${contentOrBuf}`);
-    });
-  });
 }

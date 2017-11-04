@@ -6,39 +6,32 @@ const express  = require('express');
 const morgan   = require('morgan');
 
 const { argv } = optimist;
-const app      = express();
 
-// compression
-app.use(compress());
+class WafferServer {
+  constructor() {
+    this.app = express();
 
-// logger
-app.use(morgan('dev'));
+    // compression
+    this.app.use(compress());
 
-// parse json
-app.use(parser.json());
-app.use(parser.urlencoded({ extended: true }));
+    // logger
+    this.app.use(morgan('dev'));
 
-// create routes
-router(app);
+    // parse json
+    this.app.use(parser.json());
+    this.app.use(parser.urlencoded({ extended: true }));
 
-module.exports = {
-  listen: function (port = argv.port) {
-    const listener = app.listen(port || 0, () => {
+    // create routes
+    router(this.app);
+  }
+
+  listen(port = argv.port) {
+    const listener = this.app.listen(port || 0, () => {
       console.log(`listening on ${listener.address().port}`);
     });
 
     return this;
-  },
-
-  use: function (middleware) {
-    if (middleware != null) {
-      app.use(middleware);
-    }
-
-    return this;
-  },
-
-  app: function () {
-    return app;
-  },
+  }
 }
+
+module.exports = WafferServer;

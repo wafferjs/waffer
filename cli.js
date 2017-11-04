@@ -34,10 +34,10 @@ if (argv._[0] === 'export') {
   views.unshift(views.splice(views.indexOf('index'), 1)[0]);
 
   try {
-    rimraf.sync('html');
+    rimraf.sync(argv._[1] || 'html');
   } catch (e) {}
 
-  fs.mkdirSync('html');
+  fs.mkdirSync(argv._[1] || 'html');
 
   // static files and styles
   const static = path.join(cwd, 'static');
@@ -115,4 +115,12 @@ if (argv._[0] === 'export') {
   return;
 }
 
-server.listen();
+if (argv._[0] === 'serve') {
+  server.listen();
+  return;
+}
+
+console.log('waffer init [<dir>]          # initialize waffer project');
+console.log('waffer serve [--port <port>] # simple serve');
+console.log('waffer export                # export all views into simple html site');
+console.log('waffer help                  # display help');

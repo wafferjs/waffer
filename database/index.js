@@ -4,13 +4,13 @@ const fs     = require('fs');
 
 class Database extends Events {
   constructor(options) {
+    super();
+
     if (options == null) {
       throw new Error('You must supply database connection options');
     }
 
     this.options = options;
-
-    this.connect();
   }
 
   connect() {

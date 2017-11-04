@@ -1,11 +1,12 @@
 const Mongo     = require('./database/mongo');
 const Database  = require('./database');
-const server    = require('./server');
+const Server    = require('./server');
 
-module.exports = {
-  server,
-  database: {
+module.exports = function () {
+  return new Server();
+};
+
+module.exports.database = {
     Database,
     Mongo,
-  },
-}
+};
