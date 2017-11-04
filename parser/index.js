@@ -7,24 +7,19 @@ const determine_parser = function (file) {
   const name = ext + '.js';
 
   if (~parsers.indexOf(name)) {
-    const parser = require(`./${name}`);
-    parser.name = ext;
-
-    return parser;
+    return require(`./${name}`);
   }
 
-  const parser = require(`./file.js`);
-  parser.name = ext;
-  parser.ext = ext;
-
-  return parser;
+  return require(`./file.js`);
 }
 
-const parse = function (file, next = function () {}) {
+const parse = function (file, next = function () {}, exp) {
+  const ext = '.' + file.split('.').slice(-1)[0];
+
   const parser = determine_parser(file);
   parser.parse(file, function (err, content) {
-    next(err, content, parser.ext);
-  });
+    next(err, content, parser.ext || ext);
+  }, exp);
 }
 
 module.exports = {

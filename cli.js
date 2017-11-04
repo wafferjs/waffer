@@ -62,7 +62,7 @@ if (argv._[0] === 'export') {
         d.push(ext.substr(1));
         fs.writeFileSync(d.join('.'), contentOrBuf);
       }
-    });
+    }, true);
   }
 
   for (let view of views) {
@@ -123,7 +123,7 @@ if (argv._[0] === 'export') {
 
         fs.writeFileSync(path.join(cwd, 'html', view + ext), parse5.serialize(document));
       }
-    });
+    }, true);
 
     // make script dir
     const dest = path.join(cwd, 'html', view);
@@ -153,7 +153,7 @@ if (argv._[0] === 'export') {
           d.push(ext.substr(1));
           fs.writeFileSync(d.join('.'), contentOrBuf);
         }
-      });
+      }, true);
     }
   }
 
