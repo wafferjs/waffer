@@ -44,7 +44,7 @@ class Mongo extends Database {
 
       });
 
-      this.emit('ready', conn);
+      conn.emit('ready');
     });
 
     return conn;
