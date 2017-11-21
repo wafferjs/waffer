@@ -6,6 +6,7 @@ const parser    = require('./parser');
 const fs        = require('fs-extra');
 const optimist  = require('optimist');
 const rimraf    = require('rimraf');
+const colors    = require('colors');
 const path      = require('path');
 const glob      = require('glob');
 const waffer    = require('./');
@@ -19,13 +20,35 @@ if (argv._[0] === 'init') {
 
   const src = path.join(__dirname, 'template');
   const dest = path.join(cwd, dir);
-  fs.copySync(src, dest);
-  console.log('new waffer project initialized');
+  fs.copySync(src, dest, { filter: (src, dest) => {
+    console.log('[+] '.green + dest.slice(cwd.length));
+    return true;
+  } });
+  console.log('New waffer project initialized');
   return;
 }
 
 if (!fs.existsSync(path.join(cwd, 'views'))) {
-  console.error('error: not a valid waffer project');
+  console.error('[!] '.red + 'Not a valid waffer project.');
+  return;
+}
+
+if (argv._[0] === 'view') {
+  if (argv._.length < 2) {
+    console.error('[!] '.red + 'Not a valid view name');
+    return;
+  }
+
+  const dir = argv._[1];
+
+  const src = path.join(__dirname, 'template/views/index');
+  const dest = path.join(cwd, 'views', dir);
+  fs.copySync(src, dest, { filter: (src, dest) => {
+    console.log('[+] '.green + dest.slice(cwd.length));
+    return true;
+  } });
+
+  console.log('View ' + dir.green + ' created.');
   return;
 }
 
@@ -47,6 +70,7 @@ if (argv._[0] === 'export') {
 
     if (fs.statSync(s).isDirectory()) {
       fs.ensureDirSync(p);
+      console.log('[+] '.green + p);
       continue;
     }
 
@@ -60,6 +84,7 @@ if (argv._[0] === 'export') {
         d.pop();
         d.push(ext.substr(1));
         fs.writeFileSync(d.join('.'), contentOrBuf);
+        console.log('[+] '.green + d.join('.'));
       }
     }, true);
   }
@@ -75,7 +100,9 @@ if (argv._[0] === 'export') {
       }
 
       if (contentOrBuf) {
-        fs.writeFileSync(path.join(cwd, 'html', view + ext), contentOrBuf);
+        const file = path.join(cwd, 'html', view + ext);
+        fs.writeFileSync(file, contentOrBuf);
+        console.log('[+] '.green + file);
       }
     }, true);
 
@@ -85,6 +112,7 @@ if (argv._[0] === 'export') {
 
     if (public.length > 0) {
       fs.ensureDirSync(dest);
+      console.log('[+] '.green + dest);
     }
 
     // public files
@@ -93,6 +121,7 @@ if (argv._[0] === 'export') {
 
       if (fs.statSync(s).isDirectory()) {
         fs.ensureDirSync(p);
+        console.log('[+] '.green + p);
         continue;
       }
 
@@ -106,9 +135,11 @@ if (argv._[0] === 'export') {
           d.pop();
           d.push(ext.substr(1));
           fs.writeFileSync(d.join('.'), contentOrBuf);
+          console.log('[+] '.green + d.join('.'));
         }
       }, true);
     }
+    console.log('Project exported into html/');
   }
 
 

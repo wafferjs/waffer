@@ -14,7 +14,7 @@ $ npm install waffer
 
 ## Usage
 
-## Creating new project
+### Creating new project
 ```sh
 # Create new project in current directory
 $ waffer init
@@ -23,17 +23,17 @@ $ waffer init
 $ waffer init my-website
 ```
 
-## Creating new views
+### Creating new views
 ```sh
 $ waffer view my-view
 ```
 
-## Exporting website to html
+### Exporting website to html
 ```sh
 $ waffer export
 ```
 
-## Serving content
+### Serving content
 ```sh
 # At random port
 waffer serve
