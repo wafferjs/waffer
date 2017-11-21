@@ -1,20 +1,21 @@
-# Waffer - A MVC web server with exporting functionality
+# Waffer [![Build Status](https://travis-ci.org/wvffle/waffer.svg?branch=master)](https://travis-ci.org/wvffle/waffer)
+A MVC web server with exporting functionality
 
 ## Install
 
-### For cli usage
+#### For cli usage
 ```sh
 $ npm install -g waffer
 ```
 
-### For node usage
+#### For node usage
 ```sh
 $ npm install waffer
 ```
 
 ## Usage
 
-### Creating new project
+#### Creating new project
 ```sh
 # Create new project in current directory
 $ waffer init
@@ -23,17 +24,17 @@ $ waffer init
 $ waffer init my-website
 ```
 
-### Creating new views
+#### Creating new views
 ```sh
 $ waffer view my-view
 ```
 
-### Exporting website to html
+#### Exporting website to html
 ```sh
 $ waffer export
 ```
 
-### Serving content
+#### Serving content
 ```sh
 # At random port
 waffer serve
@@ -44,7 +45,7 @@ waffer serve --port 3000
 
 ## Node API
 
-### Basic usage
+#### Basic usage
 ```js
 const waffer = require('waffer');
 const server = waffer();
@@ -52,7 +53,7 @@ const server = waffer();
 server.listen(3000);
 ```
 
-### Options
+#### Options
 ```js
 const options = {
   session: {
