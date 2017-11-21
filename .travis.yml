@@ -1,0 +1,10 @@
+language: node_js
+install:
+  - npm install
+before_script:
+  - npm link
+script:
+  - waffer init test
+  - cd test
+  - waffer view test-view
+  - waffer export

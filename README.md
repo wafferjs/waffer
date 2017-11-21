@@ -1,28 +1,70 @@
-# waffer
-Personal web server
+# Waffer - A MVC web server with exporting functionality
 
-### cli usage
-```
-waffer init [<dir>]          # initialize waffer project
-waffer serve [--port <port>] # simple serve
-waffer export                # export all views into simple html site
-waffer help                  # display help
+## Install
+
+### For cli usage
+```sh
+$ npm install -g waffer
 ```
 
-### node usage
+### For node usage
+```sh
+$ npm install waffer
+```
+
+## Usage
+
+## Creating new project
+```sh
+# Create new project in current directory
+$ waffer init
+
+# Create new project in specified directory
+$ waffer init my-website
+```
+
+## Creating new views
+```sh
+$ waffer view my-view
+```
+
+## Exporting website to html
+```sh
+$ waffer export
+```
+
+## Serving content
+```sh
+# At random port
+waffer serve
+
+# At desired port
+waffer serve --port 3000
+```
+
+## Node API
+
+### Basic usage
 ```js
 const waffer = require('waffer');
 const server = waffer();
 
 server.listen(3000);
+```
 
-const db = new waffer.database.Mongo({
-  user: 'admin',
-  pass: 'pass',
-  host: 'localhost',
-  port: 27017,
-  db: 'test',
-});
+### Options
+```js
+const options = {
+  session: {
+    // fastify-session options
+  },
+  logger: {
+    // morgan options
+  }
+};
 
-const connection = db.connect();
+const waffer = require('waffer');
+const server = waffer(options);
+
+server.listen(3000);
 ```

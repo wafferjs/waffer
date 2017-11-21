@@ -23,7 +23,13 @@
   - [ ] babel (.mjs, .es6)
   - [ ] typescript
   - [ ] livescript
+- [ ] Options
+  - [x] session
+  - [ ] logger
 - [ ] Databases
   - [ ] standardized api
   - [x] mongo
   - [ ] redis
+- [ ] API docs
+- [ ] Tests
+- [ ] TravisCI

@@ -9,7 +9,7 @@ const path     = require('path');
 const { argv } = optimist;
 
 class WafferServer {
-  constructor({ session = {} } = {}) {
+  constructor({ session = {}, logger = {} } = {}) {
     this.app = fastify();
 
     this.app.register(helmet);
@@ -18,7 +18,7 @@ class WafferServer {
     this.app.use(compress());
 
     // logger
-    this.app.use(morgan('dev'));
+    this.app.use(morgan(logger || 'dev'));
 
     const { secret, cookieName, cookie, store } = session;
     if (secret || cookieName || cookie || store) {
