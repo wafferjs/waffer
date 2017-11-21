@@ -1,16 +1,18 @@
+const helmet   = require('fastify-helmet');
 const compress = require('compression');
-const parser   = require('body-parser');
-const optimist = require('optimist');
 const router   = require('./router');
-const express  = require('express');
+const optimist = require('optimist');
+const fastify  = require('fastify');
 const morgan   = require('morgan');
+const path     = require('path');
 
 const { argv } = optimist;
 
 class WafferServer {
-  constructor(options = {}) {
-    this.app = express();
-    this.http = require(options.server || 'http').Server(this.app);
+  constructor({ session = {} } = {}) {
+    this.app = fastify();
+
+    this.app.register(helmet);
 
     // compression
     this.app.use(compress());
@@ -18,9 +20,14 @@ class WafferServer {
     // logger
     this.app.use(morgan('dev'));
 
-    // parse json
-    this.app.use(parser.json());
-    this.app.use(parser.urlencoded({ extended: true }));
+    const { secret, cookieName, cookie, store } = session;
+    if (secret || cookieName || cookie || store) {
+      this.app.register(require('fastify-cookie'));
+      this.app.register(require('fastify-session', {
+        secret: secret || 'i like waffles',
+        cookieName, cookie, store,
+      }));
+    }
   }
 
   listen(port = argv.port) {
@@ -28,8 +35,8 @@ class WafferServer {
     // create routes
     router(this.app);
 
-    const listener = this.http.listen(port || 0, () => {
-      console.log(`listening on ${listener.address().port}`);
+    this.app.listen(port || 0, () => {
+      console.log(`listening on ${this.app.server.address().port}`);
     });
 
     return this;

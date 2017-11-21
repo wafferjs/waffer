@@ -1,5 +1,5 @@
+const mime    = require('mime/lite');
 const parser  = require('./parser');
-const express = require('express');
 const stylus  = require('stylus');
 const utilus  = require('utilus');
 const path    = require('path');
@@ -44,30 +44,48 @@ const fs      = require('fs');
 module.exports = app => {
   const cwd = process.cwd();
 
-  // handle: libs
-  app.get(/^.*\/@lib\/(.+)$/, (req, res, next) => {
-    res.redirect(path.join('https://unpkg.com', req.params[0]));
-  });
+  // handle: /:view/@:file
+  // handle: @lib/:file
+  app.use((req, res, next) => {
+    if (req.file) return next();
+    let view = '';
+    let file = '';
 
-  // handle: /view/@file
-  app.use(/^(.*)\/@(.+)$/, (req, res, next) => {
-    const view = req.params[0] || 'index';
-    const file = req.params[1];
+    const index = req.url.indexOf('@');
+    if (~index) {
+      const split = req.url.split('@');
 
-    res.redirect(path.join(view, file));
-  });
+      if (split[1].startsWith('lib/')) {
+        req.file = 'https://unpkg.com/' + split.slice(1).join('@').replace('lib/', '');
+        req.redirect = true;
 
-  // redirect: /route -> /route/
-  app.get(/^\/[^.]+(?!\/).$/, (req, res) => {
-    res.redirect(path.join(req.path, '/'));
+        return next();
+      }
+
+      view = split.shift() || '/';
+      file = split.join('@');
+
+      req.file = path.join(cwd, 'views', view === '/' ? 'index' : view, 'public', file === '' ? 'index.pug' : file);
+      return next();
+    }
+
+    if (req.url.match(/\/[^.]+(?!\/).$/)) {
+      req.redirect = true;
+      req.file = req.url + '/';
+
+      return next();
+    }
+
+    next();
   });
 
   // add: { file, controller } to req
   app.use((req, res, next) => {
-    const ppath = path.parse(req.path);
+    if (req.file) return next();
+    const ppath = path.parse(req.url);
 
-    let dir = req.path;
-    if (ppath.dir === '/' && !(req.path.endsWith('/') && req.path.split('/').length === 3)) {
+    let dir = req.url;
+    if (ppath.dir === '/' && !(req.url.endsWith('/') && req.url.split('/').length === 3)) {
       ppath.dir = dir = '/index';
     }
 
@@ -82,28 +100,69 @@ module.exports = app => {
   });
 
   // handle: /route/
-  app.use(/^.*\/$/, (req, res, next) => {
+  app.use('^.*\/$', (req, res, next) => {
     require(req.controller)(req, res, next);
   }, (req, res, next) => {
     const { file } = req;
 
     parser.parse(file, (err, contentOrBuf, ext) => {
       if (err) return next(err);
-      res.type(ext).send(contentOrBuf);
+      res.type(mime.getType(ext)).send(contentOrBuf);
     }, false, req.session);
   });
 
-  // handle: static files
-  app.use(express.static(path.join(cwd, 'static')));
-
-  // handle: file.*
-  app.get('*', (req, res, next) => {
-    const { file } = req;
+  app.get('/static/*', (req, res) => {
+    const file = path.join(cwd, 'static', req.params['*']);
 
     parser.parse(file, (err, contentOrBuf, ext) => {
-      if (err) return next(err);
+      if (err)  {
+        switch (err.code) {
+          case 'ENOENT':
+            res.code(404).send({ success: false, message: 'Not found' });
+            break;
+          default:
+            res.code(500).send(err);
+        }
 
-      res.type(ext).send(`${contentOrBuf}`);
+        return;
+      }
+
+      res.type(mime.getType(ext)).send(contentOrBuf);
+    }, false, req.session);
+  });
+
+  // handle: file.*
+  app.get('*', (req, res) => {
+    const { file, redirect } = req.req;
+
+    console.log(file, redirect)
+
+    if (redirect === true) {
+      return res.redirect(file);
+    }
+
+    parser.parse(file, (err, contentOrBuf, ext) => {
+      if (err)  {
+        switch (err.code) {
+          case 'ENOENT':
+            if (!~file.indexOf('static')) {
+              const slice = file.slice(cwd.length + 7).split('/public/').join('/');
+              req.req.file = path.join(cwd, 'static', slice);
+              res.redirect(path.join('/static', slice));
+
+              return;
+            }
+
+            res.code(404).send({ success: false, message: 'Not found' });
+            break;
+          default:
+            res.code(500).send(err);
+        }
+
+        return;
+      }
+
+      res.type(mime.getType(ext)).send(contentOrBuf);
     }, false, req.session);
 
   });

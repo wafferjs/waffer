@@ -2,9 +2,11 @@ const parse5 = require('parse5');
 const path   = require('path');
 const fs     = require('fs');
 
-const _export(content, file) {
+const cwd = process.cwd();
+
+const _export = (content, file) => {
   const view = file.substr(cwd.length + 1).substr(6).split('/public/').shift();
-  const document = parse5.parse(html, { locationInfo: false });
+  const document = parse5.parse(content, { locationInfo: false });
 
   const dfs = function (root) {
     try {
@@ -12,12 +14,11 @@ const _export(content, file) {
         if (child.tagName === 'script') {
           for (let attr of child.attrs) {
             if (attr.name === 'src') {
+              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
               if (attr.value[0] === '@') {
                 attr.value = path.join(view, attr.value.substr(1));
                 continue;
               }
-
-              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
             }
           }
         }
@@ -25,12 +26,13 @@ const _export(content, file) {
         if (child.tagName === 'link') {
           for (let attr of child.attrs) {
             if (attr.name === 'href') {
+              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
               if (attr.value[0] === '@') {
                 attr.value = path.join(view, attr.value.substr(1)).replace(/\.(?!css).+$/, '.css');
                 continue;
               }
 
-              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/').replace(/\.(?!css).+$/, '.css');
+              attr.value = attr.value.replace(/\.(?!css).+$/, '.css');
             }
           }
         }
@@ -50,7 +52,7 @@ const _export(content, file) {
     return root;
   };
 
-  return next(null, parse5.serialize(dfs(document)));
+  return parse5.serialize(dfs(document));
 }
 
 const parse = (file, next, exp) => {
