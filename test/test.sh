@@ -7,8 +7,6 @@ NC='\033[0m'
 NAME='test'
 F=0
 
-echo -e "Current pwd: ${GREEN}${pwd}"
-
 function test-init {
   NAME=$1
   waffer init test-project > /dev/null
