@@ -24,11 +24,27 @@ const _export = (content, file) => {
         }
 
         if (child.tagName === 'link') {
+          let rel = 'stylesheet';
+          for (let attr of child.attrs) {
+            if (attr.name === 'rel') {
+              rel = attr.value;
+            }
+          }
+
           for (let attr of child.attrs) {
             if (attr.name === 'href') {
-              attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
+              if (~attr.value.indexOf('@lib')) {
+                attr.value = attr.value.replace('@lib/', 'https://unpkg.com/');
+                continue;
+              }
+
               if (attr.value[0] === '@') {
-                attr.value = path.join(view, attr.value.substr(1)).replace(/\.(?!css).+$/, '.css');
+                attr.value = path.join(view, attr.value.substr(1));
+
+                if (rel === 'stylesheet') {
+                  attr.value = attr.value.replace(/\.(?!css).+$/, '.css');
+                }
+
                 continue;
               }
 

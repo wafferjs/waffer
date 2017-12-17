@@ -15,13 +15,18 @@ $ npm install waffer
 
 ## Usage
 
+#### Help
+```sh
+$ waffer help
+```
+
 #### Creating new project
 ```sh
 # Create new project in current directory
-$ waffer init
+$ waffer new
 
 # Create new project in specified directory
-$ waffer init my-website
+$ waffer new my-website
 ```
 
 #### Creating new views
@@ -37,10 +42,10 @@ $ waffer export
 #### Serving content
 ```sh
 # At random port
-waffer serve
+waffer
 
 # At desired port
-waffer serve --port 3000
+waffer --port 3000
 ```
 
 ## Node API

@@ -15,7 +15,7 @@ const { argv } = optimist;
 
 const cwd = process.cwd();
 
-if (argv._[0] === 'init') {
+if (argv._[0] === 'new') {
   const dir = argv._.length < 2 ? '.' : argv._[1];
 
   const src = path.join(__dirname, 'template');
@@ -24,7 +24,18 @@ if (argv._[0] === 'init') {
     console.log('[+] '.green + dest.slice(cwd.length));
     return true;
   } });
-  console.log('New waffer project initialized');
+
+  if (dir === '.') {
+    console.log('New waffer app created');
+    console.log('To start your app use:');
+    console.log('waffer --port 8080');
+    return;
+  }
+
+  console.log(`App ${argv._[1].green} created`);
+  console.log('To start your app use:');
+  console.log('cd ' + argv._[1]);
+  console.log('waffer --port 8080');
   return;
 }
 
@@ -146,12 +157,12 @@ if (argv._[0] === 'export') {
   return;
 }
 
-if (argv._[0] === 'serve') {
-  waffer().listen();
+if (argv._[0] === 'help') {
+  console.log('waffer [--port <port>] # start application');
+  console.log('waffer init [<dir>]    # initialize waffer project');
+  console.log('waffer export          # export all views into simple html site');
+  console.log('waffer help            # display help');
   return;
 }
 
-console.log('waffer init [<dir>]          # initialize waffer project');
-console.log('waffer serve [--port <port>] # simple serve');
-console.log('waffer export                # export all views into simple html site');
-console.log('waffer help                  # display help');
+waffer().listen();
