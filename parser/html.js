@@ -53,9 +53,22 @@ const _export = (content, file) => {
           }
         }
 
+        if (child.tagName === 'img') {
+          for (let attr of child.attrs) {
+            if (attr.name === 'src') {
+              if (attr.value[0] === '@') {
+                attr.value = path.join(view, attr.value.substr(1));
+              }
+            }
+          }
+        }
+
         if (child.tagName === 'a') {
           for (let attr of child.attrs) {
             if (attr.name === 'href') {
+              if (attr.value[0] === '@') {
+                attr.value = path.join(view, attr.value.substr(1));
+              }
               attr.value = attr.value.replace(/^\/([^/]+)\/$/, '$1.html');
             }
           }
