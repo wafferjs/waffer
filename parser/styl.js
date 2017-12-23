@@ -41,11 +41,13 @@ const render = (content, file, next, exp) => {
           return compiler.visit(node);
         }).join('');
 
+        if (url.startsWith('@')) url = url.slice(1);
+
         if (fs.existsSync(path.join(cwd, 'views', view, 'public', url))) {
           return new nodes.Literal(`url("${url}")`);
         }
 
-        return new nodes.Literal(`url("..${url}")`);
+        return new nodes.Literal(`url("../${url}")`);
       }
 
       urlfunc.raw = true;
