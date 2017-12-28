@@ -23,42 +23,43 @@ const render = (content, file, next, exp) => {
   // add global styles
   style.include(path.join(cwd, 'styles'));
 
-  if (exp) {
-    // style.define('url', stylus.url({ paths: [exp] }))
-    const p = file.substr(cwd.length + 1);
+  const p = file.substr(cwd.length + 1);
 
-    // we care only about views
-    if (p.startsWith('views/')) {
-      const div = p.substr(6).split('/public/');
-      const view = div.shift();
+  // we care only about views
+  if (p.startsWith('views/')) {
+    const div = p.substr(6).split('/public/');
+    const view = div.shift();
 
-      const urlfunc = function (url) {
-        const Compiler = require('stylus/lib/visitor/compiler');
-        const nodes    = require('stylus/lib/nodes');
-        const compiler = new Compiler();
+    const urlfunc = function (url) {
+      const Compiler = require('stylus/lib/visitor/compiler');
+      const nodes    = require('stylus/lib/nodes');
+      const compiler = new Compiler();
 
-        url = url.nodes.map(function(node){
-          return compiler.visit(node);
-        }).join('');
+      url = url.nodes.map(function(node){
+        return compiler.visit(node);
+      }).join('');
 
-        if (url.startsWith('@')) url = url.slice(1);
-
-        if (fs.existsSync(path.join(cwd, 'views', view, 'public', url))) {
-          return new nodes.Literal(`url("${url}")`);
+      if (url.startsWith('@')) {
+        if (!exp) {
+          return new nodes.Literal(`url("/${url}")`);
         }
 
-        return new nodes.Literal(`url("../${url}")`);
+        const parsed  = path.parse(path.join(cwd, 'views', view, 'public', url.slice(1)));
+        const fparsed = path.parse(this.filename);
+        return new nodes.Literal(`url("${path.join(path.relative(fparsed.dir, parsed.dir), parsed.base)}")`);
       }
 
-      urlfunc.raw = true;
-      style.define('url', urlfunc);
+      return new nodes.Literal(`url("${url}")`);
     }
 
+    urlfunc.raw = true;
+    style.define('url', urlfunc);
   }
+
 
   style.render((err, css) => {
     if (err) {
-      return;
+      return next(err, `/**\n${err.message}*/`);
     }
 
     next(err, css);

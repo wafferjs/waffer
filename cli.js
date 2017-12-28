@@ -150,7 +150,8 @@ if (argv._[0] === 'export') {
         }
       }, true);
     }
-    console.log('Project exported into html/');
+
+    process.on('exit', e => console.log('Project exported into html/'));
   }
 
 

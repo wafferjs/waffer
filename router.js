@@ -135,8 +135,6 @@ module.exports = app => {
   app.get('*', (req, res) => {
     const { file, redirect } = req.req;
 
-    console.log(file, redirect)
-
     if (redirect === true) {
       return res.redirect(file);
     }
