@@ -1,4 +1,4 @@
-const pug    = require('pug');
+const pug = require('pug');
 
 const cwd = process.cwd();
 

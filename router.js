@@ -10,35 +10,32 @@ const fs      = require('fs');
 /**
  * server structure:
  *
- * ├─ bower_components/
  * ├─ static/
- * ├─ styles/
- * │  ├─ variables.styl
  * │  └─ reset.styl
+ * │
+ * ├─ styles/
+ * │  └─ variables.styl
+ * │
+ * ├─ controllers/
+ * │  ├─ index/
+ * │  │  └─ index.js
+ * │  └─ view/
+ * │     └─ index.js
  * │
  * └─ views/
  *    ├─ index/
- *    │  ├─ controller/
- *    │  │  └─ index.js
- *    │  │
- *    │  └ public/
- *    │     ├─ index.js
- *    │     ├─ index.pug
- *    │     └─ index.styl
+ *    │  ├─ styles
+ *    │  │  └─ *.styl
+ *    │  ├─ scripts
+ *    │  │  └─ *.js
+ *    │  └─ index.pug
  *    │
  *    └─ view/
- *       ├─ subview/                // TODO:
- *       │  ├─ index.js             // Check controller support in subviews
- *       │  ├─ index.pug
- *       │  └─ index.styl
- *       │
- *       ├─ controller/
- *       │  └─ index.js
- *       │
- *       └ public/
- *          ├─ index.js
- *          ├─ index.pug
- *          └─ index.styl
+ *       ├─ styles
+ *       │  └─ *.styl
+ *       ├─ scripts
+ *       │  └─ *.js
+ *       └─ index.pug
  */
 
 module.exports = app => {
@@ -46,71 +43,56 @@ module.exports = app => {
 
   // handle: /:view/@:file
   // handle: @lib/:file
-  app.use((req, res, next) => {
-    if (req.file) return next();
-    let view = '';
-    let file = '';
+  app.addHook('preHandler', (request, reply, next) => {
+    let url = request.params['*'];
 
-    const index = req.url.indexOf('@');
-    if (~index) {
-      const split = req.url.split('@');
+    const at = url.split('@');
+    if (at.length > 1) {
 
-      if (split[1].startsWith('lib/')) {
-        req.file = 'https://unpkg.com/' + split.slice(1).join('@').replace('lib/', '');
-        req.redirect = true;
-
-        return next();
+      if (at[1].startsWith('lib/')) {
+        return reply.redirect('https://unpkg.com/' + at.slice(1).join('@').replace('lib/', ''));
       }
 
-      view = split.shift() || '/';
-      file = split.join('@');
+      const view = at.shift() || '/';
+      const file = at.join('@');
 
-      req.file = path.join(cwd, 'views', view === '/' ? 'index' : view, 'public', file === '' ? 'index.pug' : file);
+      request.file = path.join(cwd, 'views', view === '/' ? 'index' : view, file === '' ? 'index.pug' : file);
       return next();
     }
 
-    if (req.url.match(/\/[^.]+(?!\/).$/)) {
-      req.redirect = true;
-      req.file = req.url + '/';
+    const parsed_url = path.parse(url);
 
-      return next();
+    if (parsed_url.ext === '' && url.slice(-1) !== '/') {
+      url += '/';
+      return reply.redirect(url);
     }
+
+    if (parsed_url.ext === '') {
+      // handle ^*./$ routes
+      const view = url === '/' ? 'index' : url;
+      const controller = path.join(cwd, 'controllers', view);
+
+      request.file = path.join(cwd, 'views', view, 'index.pug');
+
+      try {
+        return require(controller)(request, reply, next);
+      } catch (err) {
+        if (err.code === 'MODULE_NOT_FOUND') {
+          return reply.code(404).send({ success: false, message: 'View not found' });
+        }
+
+        return reply.code(500).send({ success: false, message: err.message});
+      }
+
+    }
+
+    // add: { file, controller } to req
+    request.file = path.join(cwd, 'static', url);
 
     next();
   });
 
-  // add: { file, controller } to req
-  app.use((req, res, next) => {
-    if (req.file) return next();
-    const ppath = path.parse(req.url);
-
-    let dir = req.url;
-    if (ppath.dir === '/' && !(req.url.endsWith('/') && req.url.split('/').length === 3)) {
-      ppath.dir = dir = '/index';
-    }
-
-    if (ppath.ext === '') {
-      req.controller = path.join(cwd, 'views', dir, 'controller');
-      req.file = path.join(cwd, 'views', dir, 'public/index.pug');
-    } else {
-      req.file = path.join(cwd, 'views', ppath.dir, 'public', ppath.base);
-    }
-
-    next();
-  });
-
-  // handle: /route/
-  app.use('^.*\/$', (req, res, next) => {
-    require(req.controller)(req, res, next);
-  }, (req, res, next) => {
-    const { file } = req;
-
-    parser.parse(file, (err, contentOrBuf, ext) => {
-      if (err) return next(err);
-      res.type(mime.getType(ext)).send(contentOrBuf);
-    }, false, req.session);
-  });
-
+  /*
   app.get('/static/*', (req, res) => {
     const file = path.join(cwd, 'static', req.params['*']);
 
@@ -130,30 +112,20 @@ module.exports = app => {
       res.type(mime.getType(ext)).send(contentOrBuf);
     }, false, req.session);
   });
+  */
 
   // handle: file.*
-  app.get('*', (req, res) => {
-    const { file, redirect } = req.req;
-
-    if (redirect === true) {
-      return res.redirect(file);
-    }
+  app.get('*', (request, res) => {
+    const { file } = request;
 
     parser.parse(file, (err, contentOrBuf, ext) => {
       if (err)  {
         switch (err.code) {
           case 'ENOENT':
-            if (!~file.indexOf('static')) {
-              const slice = file.slice(cwd.length + 7).split('/public/').join('/');
-              req.req.file = path.join(cwd, 'static', slice);
-              res.redirect(path.join('/static', slice));
-
-              return;
-            }
-
             res.code(404).send({ success: false, message: 'Not found' });
             break;
           default:
+            err.success = false;
             res.code(500).send(err);
         }
 
@@ -161,7 +133,7 @@ module.exports = app => {
       }
 
       res.type(mime.getType(ext)).send(contentOrBuf);
-    }, false, req.session);
+    }, false, request.session);
 
   });
 

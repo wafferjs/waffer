@@ -27,7 +27,7 @@ const render = (content, file, next, exp) => {
 
   // we care only about views
   if (p.startsWith('views/')) {
-    const div = p.substr(6).split('/public/');
+    const div = p.substr(6).split('/styles/');
     const view = div.shift();
 
     const urlfunc = function (url) {
@@ -41,10 +41,10 @@ const render = (content, file, next, exp) => {
 
       if (url.startsWith('@')) {
         if (!exp) {
-          return new nodes.Literal(`url("/${url}")`);
+          return new nodes.Literal(`url("/${view}/${url}")`);
         }
 
-        const parsed  = path.parse(path.join(cwd, 'views', view, 'public', url.slice(1)));
+        const parsed  = path.parse(path.join(cwd, 'views', view, url.slice(1)));
         const fparsed = path.parse(this.filename);
         return new nodes.Literal(`url("${path.join(path.relative(fparsed.dir, parsed.dir), parsed.base)}")`);
       }

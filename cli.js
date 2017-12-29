@@ -73,11 +73,10 @@ if (argv._[0] === 'export') {
 
   fs.mkdirSync(argv._[1] || 'html');
 
-  // static files and styles
-  const static = path.join(cwd, 'static');
-  const styles = path.join(cwd, 'styles');
-  for (let s of glob.sync(`{${static}/**,${styles}/**}`, { dot: true })) {
-    const p = path.join(cwd, 'html', s.substring(static.length));
+  // static files
+  const static = path.join(cwd, 'static', '**');
+  for (let s of glob.sync(static, { dot: true })) {
+    const p = path.join(cwd, 'html', s.substring(static.length - 3));
 
     if (fs.statSync(s).isDirectory()) {
       fs.ensureDirSync(p);
@@ -99,9 +98,8 @@ if (argv._[0] === 'export') {
       }
     }, true);
   }
-
   for (let view of views) {
-    const dir = path.join(cwd, 'views', view, 'public');
+    const dir = path.join(cwd, 'views', view);
 
     // index of view
     const index = path.join(dir, 'index.pug');
@@ -110,6 +108,7 @@ if (argv._[0] === 'export') {
         console.error(err);
       }
 
+      console.log(view)
       if (contentOrBuf) {
         const file = path.join(cwd, 'html', view + ext);
         fs.writeFileSync(file, contentOrBuf);
@@ -160,7 +159,7 @@ if (argv._[0] === 'export') {
 
 if (argv._[0] === 'help') {
   console.log('waffer [--port <port>] # start application');
-  console.log('waffer init [<dir>]    # initialize waffer project');
+  console.log('waffer new [<dir>]     # initialize waffer project');
   console.log('waffer export          # export all views into simple html site');
   console.log('waffer help            # display help');
   return;

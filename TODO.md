@@ -1,7 +1,7 @@
 ## TODO
 - [ ] cli
   - [x] export
-  - [x] serve
+  - [x] new
   - [ ] view
   - [x] help
 - [ ] Router
@@ -31,5 +31,5 @@
   - [x] mongo
   - [ ] redis
 - [ ] API docs
-- [ ] Tests
-- [ ] TravisCI
+- [x] Tests
+- [x] TravisCI
