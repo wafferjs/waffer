@@ -15,6 +15,16 @@ const { argv } = optimist;
 
 const cwd = process.cwd();
 
+if (argv._[0] === 'help') {
+  console.log('waffer [--port <port>]   # start application');
+  console.log('waffer new [<dir>]       # initialize waffer project');
+  console.log('waffer view <name>       # create new view');
+  console.log('waffer controller <name> # create new controller');
+  console.log('waffer export            # export all views into simple html site');
+  console.log('waffer help              # display help');
+  return;
+}
+
 if (argv._[0] === 'new') {
   const dir = argv._.length < 2 ? '.' : argv._[1];
 
@@ -52,14 +62,44 @@ if (argv._[0] === 'view') {
 
   const dir = argv._[1];
 
-  const src = path.join(__dirname, 'template/views/index');
-  const dest = path.join(cwd, 'views', dir);
+  // view
+  var src = path.join(__dirname, 'template/views/index');
+  var dest = path.join(cwd, 'views', dir);
+
+  fs.copySync(src, dest, { filter: (src, dest) => {
+    console.log('[+] '.green + dest.slice(cwd.length));
+    return true;
+  } });
+
+  // controller
+  var src = path.join(__dirname, 'template/controllers/index');
+  var dest = path.join(cwd, 'controllers', dir);
+
   fs.copySync(src, dest, { filter: (src, dest) => {
     console.log('[+] '.green + dest.slice(cwd.length));
     return true;
   } });
 
   console.log('View ' + dir.green + ' created.');
+  return;
+}
+
+if (argv._[0] === 'controller') {
+  if (argv._.length < 2) {
+    console.error('[!] '.red + 'Not a valid controller name');
+    return;
+  }
+
+  const dir = argv._[1];
+  const src = path.join(__dirname, 'template/controllers/index');
+  const dest = path.join(cwd, 'controllers', dir);
+
+  fs.copySync(src, dest, { filter: (src, dest) => {
+    console.log('[+] '.green + dest.slice(cwd.length));
+    return true;
+  } });
+
+  console.log('Controller ' + dir.green + ' created.');
   return;
 }
 
@@ -154,14 +194,6 @@ if (argv._[0] === 'export') {
   }
 
 
-  return;
-}
-
-if (argv._[0] === 'help') {
-  console.log('waffer [--port <port>] # start application');
-  console.log('waffer new [<dir>]     # initialize waffer project');
-  console.log('waffer export          # export all views into simple html site');
-  console.log('waffer help            # display help');
   return;
 }
 

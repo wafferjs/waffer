@@ -2,7 +2,8 @@
 - [ ] cli
   - [x] export
   - [x] new
-  - [ ] view
+  - [x] view
+  - [x] controller
   - [x] help
 - [ ] Router
   - [x] unpkg imports

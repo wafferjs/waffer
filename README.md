@@ -18,6 +18,12 @@ $ npm install waffer
 #### Help
 ```sh
 $ waffer help
+waffer [--port <port>]   # start application
+waffer new [<dir>]       # initialize waffer project
+waffer view <name>       # create new view
+waffer controller <name> # create new controller
+waffer export            # export all views into simple html site
+waffer help              # display help
 ```
 
 #### Creating new project
@@ -32,6 +38,11 @@ $ waffer new my-website
 #### Creating new views
 ```sh
 $ waffer view my-view
+```
+
+#### Creating new controllers
+```sh
+$ waffer controller my-controller
 ```
 
 #### Exporting website to html
