@@ -21,8 +21,8 @@
     "fastify-static": "^0.8.0",
     "mime": "^2.2.0",
     "tmp": "0.0.33",
-    "waffer-parser-default": "^1.0.0",
-    "waffer-parser-pug": "^1.0.0",
-    "waffer-parser-stylus": "^1.0.0"
+    "waffer-parser-default": "^1.0.2",
+    "waffer-parser-pug": "^1.0.2",
+    "waffer-parser-stylus": "^1.0.1"
   }
 }
