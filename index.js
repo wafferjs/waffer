@@ -1,12 +1,5 @@
-const Mongo     = require('./database/mongo');
-const Database  = require('./database');
-const Server    = require('./server');
+const Server    = require('./lib/server');
 
-module.exports = function () {
-  return new Server();
-};
-
-module.exports.database = {
-    Database,
-    Mongo,
+module.exports = function (options) {
+  return new Server(options);
 };

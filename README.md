@@ -18,6 +18,7 @@ $ npm install waffer
 #### Help
 ```sh
 $ waffer help
+
 waffer [--port <port>]   # start application
 waffer new [<dir>]       # initialize waffer project
 waffer view <name>       # create new view
