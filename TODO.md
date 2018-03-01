@@ -1,5 +1,5 @@
 ## TODO
-- [ ] cli
+- [x] cli
   - [x] export
   - [x] new
   - [x] view
@@ -24,13 +24,5 @@
   - [ ] babel (.mjs, .es6)
   - [ ] typescript
   - [ ] livescript
-- [ ] Options
-  - [x] session
-  - [ ] logger
-- [ ] Databases
-  - [ ] standardized api
-  - [x] mongo
-  - [ ] redis
 - [ ] API docs
-- [x] Tests
-- [x] TravisCI
+- [ ] Tests
