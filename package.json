@@ -25,6 +25,7 @@
     "tmp": "0.0.33",
     "vue": "^2.5.13",
     "waffer-parser-default": "^1.0.3",
+    "waffer-parser-html": "^1.0.3",
     "waffer-parser-pug": "^1.0.6",
     "waffer-parser-stylus": "^1.0.3"
   }
