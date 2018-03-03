@@ -17,15 +17,15 @@
   },
   "homepage": "https://github.com/wafferjs/waffer#readme",
   "dependencies": {
-    "fastify": "^1.0.0-rc.2",
+    "fastify": "^1.0.0-rc.3",
     "fastify-static": "^0.8.0",
     "fs-extra": "^5.0.0",
     "mime": "^2.2.0",
     "pino": "^4.13.0",
     "tmp": "0.0.33",
     "vue": "^2.5.13",
-    "waffer-parser-default": "^1.0.2",
-    "waffer-parser-pug": "^1.0.5",
-    "waffer-parser-stylus": "^1.0.2"
+    "waffer-parser-default": "^1.0.3",
+    "waffer-parser-pug": "^1.0.6",
+    "waffer-parser-stylus": "^1.0.3"
   }
 }
