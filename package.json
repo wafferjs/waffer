@@ -27,6 +27,6 @@
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.3",
     "waffer-parser-pug": "^1.0.6",
-    "waffer-parser-stylus": "^1.0.3"
+    "waffer-parser-stylus": "^1.0.4"
   }
 }
