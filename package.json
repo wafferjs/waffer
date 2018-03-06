@@ -3,9 +3,7 @@
   "version": "1.2.13",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wafferjs/waffer.git"
@@ -17,6 +15,7 @@
   },
   "homepage": "https://github.com/wafferjs/waffer#readme",
   "dependencies": {
+    "caminte": "^0.4.0",
     "fastify": "^1.0.0-rc.3",
     "fastify-static": "^0.8.0",
     "fs-extra": "^5.0.0",

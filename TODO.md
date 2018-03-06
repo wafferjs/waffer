@@ -4,11 +4,14 @@
   - [x] new
   - [x] view
   - [x] controller
+  - [x] component
   - [x] help
+  - [ ] setting default parsers
 - [ ] Router
   - [x] unpkg imports
   - [x] view imports
   - [ ] subviews support
+  - [ ] setting default parsers
 - [ ] Parsers
   - [x] pug
   - [x] jade
@@ -21,8 +24,10 @@
   - [ ] sass
   - [ ] postcss
   - [ ] coffee
-  - [ ] babel (.mjs, .es6)
+  - [ ] babel (*.es.js)
   - [ ] typescript
   - [ ] livescript
 - [ ] API docs
+- [ ] ORM
+  - [ ] caminte
 - [ ] Tests

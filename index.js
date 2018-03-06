@@ -1,5 +1,5 @@
-const Server    = require('./lib/server');
+const Server    = require('./lib/server')
 
 module.exports = function (options) {
-  return new Server(options);
-};
+  return new Server(options)
+}
