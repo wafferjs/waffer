@@ -3,7 +3,12 @@
   "version": "1.2.13",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "docsify": "docsify",
+    "docs":
+      "jsdoc2md --template docs/api.hbs index.js lib/**.js > docs/api.md;jsdoc2md --template docs/_sidebar.hbs index.js lib/**.js > docs/_sidebar.md"
+
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wafferjs/waffer.git"
@@ -27,5 +32,9 @@
     "waffer-parser-html": "^1.0.4",
     "waffer-parser-pug": "^1.0.7",
     "waffer-parser-stylus": "^1.0.4"
+  },
+  "devDependencies": {
+    "docsify-cli": "^4.2.0",
+    "jsdoc-to-markdown": "^4.0.1"
   }
 }
