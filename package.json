@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "docsify": "docsify",
-    "docs":
-      "jsdoc2md --template docs/api.hbs index.js lib/**.js > docs/api.md;jsdoc2md --template docs/_sidebar.hbs index.js lib/**.js > docs/_sidebar.md"
-
+    "docs": "jsdoc2md --template docs/api.hbs index.js lib/**.js > docs/api.md;jsdoc2md --template docs/_sidebar.hbs index.js lib/**.js > docs/_sidebar.md"
   },
   "repository": {
     "type": "git",
@@ -27,6 +25,7 @@
     "mime": "^2.2.0",
     "pino": "^4.13.0",
     "tmp": "0.0.33",
+    "turbo-http": "^0.3.0",
     "vue": "^2.5.13",
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
