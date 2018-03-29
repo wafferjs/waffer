@@ -31,7 +31,7 @@
     "vue-router": "^3.0.1",
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
-    "waffer-parser-pug": "^1.0.7",
+    "waffer-parser-pug": "^1.0.8",
     "waffer-parser-stylus": "^1.0.4"
   },
   "devDependencies": {
