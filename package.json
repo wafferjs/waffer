@@ -19,14 +19,15 @@
   "homepage": "https://github.com/wafferjs/waffer#readme",
   "dependencies": {
     "caminte": "^0.4.0",
-    "fastify": "^1.0.0-rc.3",
-    "fastify-static": "^0.8.0",
+    "fastify": "^1.2.0",
+    "fastify-static": "^0.9.0",
     "fs-extra": "^5.0.0",
     "mime": "^2.2.0",
-    "pino": "^4.13.0",
+    "pino": "^4.15.3",
+    "status-codes": "0.0.1",
     "tmp": "0.0.33",
     "turbo-http": "^0.3.0",
-    "vue": "^2.5.13",
+    "vue": "^2.5.16",
     "vue-router": "^3.0.1",
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
@@ -34,7 +35,7 @@
     "waffer-parser-stylus": "^1.0.4"
   },
   "devDependencies": {
-    "docsify-cli": "^4.2.0",
+    "docsify-cli": "^4.2.1",
     "jsdoc-to-markdown": "^4.0.1"
   }
 }
