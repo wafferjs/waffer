@@ -21,6 +21,7 @@
     "caminte": "^0.4.0",
     "fastify": "^1.2.0",
     "fastify-static": "^0.9.0",
+    "findup-sync": "^2.0.0",
     "fs-extra": "^5.0.0",
     "mime": "^2.2.0",
     "pino": "^4.15.3",
@@ -32,7 +33,7 @@
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
     "waffer-parser-pug": "^1.0.8",
-    "waffer-parser-stylus": "^1.0.4"
+    "waffer-parser-stylus": "^1.0.5"
   },
   "devDependencies": {
     "docsify-cli": "^4.2.1",
