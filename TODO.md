@@ -10,7 +10,7 @@
 - [ ] Router
   - [x] unpkg imports
   - [x] view imports
-  - [ ] subviews support
+  - [x] subviews support (as a local router)
   - [ ] setting default parsers
 - [ ] Parsers
   - [x] pug
@@ -24,7 +24,7 @@
   - [ ] sass
   - [ ] postcss
   - [ ] coffee
-  - [ ] babel (*.es.js)
+  - [ ] babel (.es.js)
   - [ ] typescript
   - [ ] livescript
 - [ ] API docs
