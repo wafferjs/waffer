@@ -28,6 +28,7 @@
     "tmp": "0.0.33",
     "turbo-http": "^0.3.0",
     "vue": "^2.5.16",
+    "vue-progressbar": "^0.7.5",
     "vue-router": "^3.0.1",
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
