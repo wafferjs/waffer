@@ -6,11 +6,3 @@ before_script:
 - sudo ln -s $(which node) /usr/bin/node
 script:
 - cd test && ./test.sh && cd ..
-deploy:
-  provider: npm
-  email: casper@wvffle.net
-  tag: next
-  api_key:
-    secure: lSlpsplaIw7no1vWC+9Aozd3U3nauY3SqK5XfFfutKulOyhNhGex52xD6QsXFJu8Tjbdgzm81Q6gNq8viNGrt659DKUo0anNad2n2il4wX0jG6pWMU9DZiA2PFE+BS0Wk/4G5VZuBK7pZWRG+haF/3Emk1K4AgiU3IUZd2pE2tCo0jPXZc0MZ9V+a8nksR75VuUo3KgQ9ZX/Sv8QWhMEHIlyHbdKnzMCZDF2IwlT9loB8JoHSWNUdJF7VX+qhPJqOhC8hC4f4fStLsNJqzxt3th37Gg2SUv5nM3Wg5u2p5X9kCK9OrNei7tTi02/P2XgD7y3oCJ229C6hR9FLE/rKZKKxLjw/yT3MC3/SmrO/p0yJSfeK3a5tOnku41bEFRGsZwemd1Z++Eql3a9q93V2B/ef1AdIba6aYERdzkK1darSNMzulr1jm5uEXa1qoxMFlH2rlIZdNh1YqSU1gitIrpS4/SYtRVVSmmmD/O4xIYp/KaBhRkaUSg0qSb3KT2n4Cd4poEtGTYVNy2fqgsklPCp48kA/F7LG9ptsbuAVnREvMAc+V8hnwa5IpW2ngt7HWD/BSdaN8YMdb2m/9TeIlbCQWZSrJrNW9j4QuEM2B71o1k6IFZ8O1g6Gd7Amk3+3ifCT0Y3x6d8vIJt1c3Yu1JobK/HiolUHdgZ9omFv+M=
-  on:
-    repo: wvffle/waffer
