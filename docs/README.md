@@ -12,7 +12,7 @@ Simple web server
 $ npm install -g waffer-cli
 ```
 
-There is now a new repo for cli [wafferjs/waffer-cli](/wafferjs/waffer-cli)
+There is now a new repo for cli [wafferjs/waffer-cli](https://github.com/wafferjs/waffer-cli)
 
 #### For node usage
 ```sh
