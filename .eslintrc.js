@@ -3,8 +3,15 @@ module.exports = {
   plugins: [
     'standard',
     'promise',
+    'dependencies',
+    'compat',
   ],
   rules: {
+    'compat/compat': 'error',
+    'dependencies/case-sensitive': 'error',
+    'dependencies/no-cycles': 'error',
+    'dependencies/no-unresolved': 'error',
+    'import/no-extraneous-dependencies': 'error',
     semi: [ 'warn' ],
     'valid-jsdoc': [ 'error' ],
     'object-curly-spacing': [ 'error', 'always' ],
