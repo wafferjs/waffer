@@ -19,8 +19,6 @@
   "homepage": "https://github.com/wafferjs/waffer#readme",
   "dependencies": {
     "caminte": "^0.4.0",
-    "fastify": "^1.2.0",
-    "fastify-static": "^0.9.0",
     "findup-sync": "^2.0.0",
     "fs-extra": "^5.0.0",
     "mime": "^2.2.0",
