@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "docsify": "docsify",
-    "docs": "jsdoc2md --template docs/api.hbs index.js lib/**.js > docs/api.md;jsdoc2md --template docs/_sidebar.hbs index.js lib/**.js > docs/_sidebar.md"
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -25,7 +24,6 @@
     "mime": "^2.3.1",
     "pino": "^4.16.1",
     "status-codes": "0.0.1",
-    "tmp": "0.0.33",
     "turbo-http": "^0.3.0",
     "vue": "^2.5.16",
     "vue-progressbar": "^0.7.5",
@@ -36,7 +34,6 @@
     "waffer-parser-stylus": "^1.0.5"
   },
   "devDependencies": {
-    "docsify-cli": "^4.2.1",
-    "jsdoc-to-markdown": "^4.0.1"
+    "auto-changelog": "^1.7.0"
   }
 }
