@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "version": "auto-changelog -p && git add CHANGELOG.md"
+    "version": "auto-changelog -pt keepachangelog --commit-limit 7 && git add CHANGELOG.md",
+    "publish": "git push"
   },
   "repository": {
     "type": "git",
