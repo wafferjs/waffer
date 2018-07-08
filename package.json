@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/wafferjs/waffer#readme",
   "dependencies": {
-    "axios": "^0.18.0",
     "caminte": "^0.4.1",
     "findup-sync": "^2.0.0",
     "fs-extra": "^6.0.1",
@@ -27,10 +26,6 @@
     "signale": "^1.2.1",
     "status-codes": "0.0.1",
     "turbo-http": "^0.3.0",
-    "un": "0.0.0",
-    "vue": "^2.5.16",
-    "vue-progressbar": "^0.7.5",
-    "vue-router": "^3.0.1",
     "waffer-parser-default": "^1.0.3",
     "waffer-parser-html": "^1.0.4",
     "waffer-parser-pug": "^1.0.8",
